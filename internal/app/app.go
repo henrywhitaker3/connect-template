@@ -23,7 +23,7 @@ import (
 type server interface {
 	Start(context.Context) error
 	Stop(context.Context) error
-	// ServeHTTP(w http.ResponseWriter, r *http.Request)
+	ServeHTTP(w http.ResponseWriter, r *http.Request)
 	Register(path string, handler http.Handler)
 }
 

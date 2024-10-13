@@ -24,6 +24,6 @@ func (h *HelloServer) Hello(
 ) (*connect.Response[hellov1.HelloResponse], error) {
 	logger.Logger(ctx).Info("got hello")
 	return connect.NewResponse(&hellov1.HelloResponse{
-		Message: fmt.Sprintf("Hello %s!", req.Msg),
+		Message: fmt.Sprintf("Hello %s!", req.Msg.Name),
 	}), nil
 }
