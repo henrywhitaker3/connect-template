@@ -5,18 +5,17 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/henrywhitaker3/connect-template/database/queries"
+	"github.com/henrywhitaker3/connect-template/internal/config"
+	"github.com/henrywhitaker3/connect-template/internal/crypto"
+	"github.com/henrywhitaker3/connect-template/internal/jwt"
+	"github.com/henrywhitaker3/connect-template/internal/metrics"
+	"github.com/henrywhitaker3/connect-template/internal/postgres"
+	"github.com/henrywhitaker3/connect-template/internal/probes"
+	"github.com/henrywhitaker3/connect-template/internal/redis"
+	"github.com/henrywhitaker3/connect-template/internal/storage"
+	"github.com/henrywhitaker3/connect-template/internal/workers"
 	gocache "github.com/henrywhitaker3/go-cache"
-	"github.com/henrywhitaker3/go-template/database/queries"
-	"github.com/henrywhitaker3/go-template/internal/config"
-	"github.com/henrywhitaker3/go-template/internal/crypto"
-	"github.com/henrywhitaker3/go-template/internal/jwt"
-	"github.com/henrywhitaker3/go-template/internal/metrics"
-	"github.com/henrywhitaker3/go-template/internal/postgres"
-	"github.com/henrywhitaker3/go-template/internal/probes"
-	"github.com/henrywhitaker3/go-template/internal/redis"
-	"github.com/henrywhitaker3/go-template/internal/storage"
-	"github.com/henrywhitaker3/go-template/internal/users"
-	"github.com/henrywhitaker3/go-template/internal/workers"
 	"github.com/labstack/echo/v4"
 	"github.com/redis/rueidis"
 	"github.com/thanos-io/objstore"
@@ -40,8 +39,6 @@ type App struct {
 	Metrics *metrics.Metrics
 
 	Runner *workers.Runner
-
-	Users *users.Users
 
 	Jwt        *jwt.Jwt
 	Encryption *crypto.Encrptor
@@ -77,8 +74,6 @@ func New(ctx context.Context, conf *config.Config) (*App, error) {
 		Queries:  queries,
 		Redis:    redis,
 		Cache:    gocache.NewCache(gocache.NewRueidisStore(redis)),
-
-		Users: users.New(queries),
 
 		Encryption: enc,
 		Jwt:        jwt.New(conf.JwtSecret, redis),

@@ -11,12 +11,10 @@ import (
 	"time"
 
 	"github.com/docker/go-connections/nat"
-	"github.com/henrywhitaker3/go-template/internal/app"
-	"github.com/henrywhitaker3/go-template/internal/config"
-	"github.com/henrywhitaker3/go-template/internal/http"
-	"github.com/henrywhitaker3/go-template/internal/logger"
-	pg "github.com/henrywhitaker3/go-template/internal/postgres"
-	"github.com/henrywhitaker3/go-template/internal/users"
+	"github.com/henrywhitaker3/connect-template/internal/app"
+	"github.com/henrywhitaker3/connect-template/internal/config"
+	"github.com/henrywhitaker3/connect-template/internal/logger"
+	pg "github.com/henrywhitaker3/connect-template/internal/postgres"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
@@ -32,7 +30,7 @@ var (
 )
 
 func init() {
-	re := regexp.MustCompile(`^(.*go-template)`)
+	re := regexp.MustCompile(`^(.*connect-template)`)
 	cwd, _ := os.Getwd()
 	rootPath := re.Find([]byte(cwd))
 	root = string(rootPath)
@@ -77,7 +75,7 @@ func newApp(t *testing.T) (*app.App, context.CancelFunc) {
 	)
 	require.Nil(t, err)
 
-	conf, err := config.Load(fmt.Sprintf("%s/go-template.example.yaml", root))
+	conf, err := config.Load(fmt.Sprintf("%s/connect-template.example.yaml", root))
 	require.Nil(t, err)
 	conn, err := pgCont.ConnectionString(context.Background())
 	require.Nil(t, err)
@@ -121,8 +119,6 @@ func newApp(t *testing.T) (*app.App, context.CancelFunc) {
 	app, err := app.New(ctx, conf)
 	require.Nil(t, err)
 
-	app.Http = http.New(app)
-
 	mig, err := pg.NewMigrator(app.Database)
 	require.Nil(t, err)
 
@@ -133,29 +129,6 @@ func newApp(t *testing.T) (*app.App, context.CancelFunc) {
 		require.Nil(t, pgCont.Terminate(ctx))
 		cancel()
 	}
-}
-
-func User(t *testing.T, app *app.App) (*users.User, string) {
-	require.NotNil(t, app)
-
-	password := Sentence(5)
-
-	user, err := app.Users.CreateUser(context.Background(), users.CreateParams{
-		Name:     Word(),
-		Email:    Email(),
-		Password: password,
-	})
-	require.Nil(t, err)
-	return user, password
-}
-
-func Token(t *testing.T, app *app.App, user *users.User) string {
-	require.NotNil(t, app)
-	require.NotNil(t, user)
-
-	token, err := app.Jwt.NewForUser(user, time.Minute)
-	require.Nil(t, err)
-	return token
 }
 
 func minio(t *testing.T, conf *config.Storage, ctx context.Context) {

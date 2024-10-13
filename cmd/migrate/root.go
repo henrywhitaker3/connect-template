@@ -1,8 +1,8 @@
 package migrate
 
 import (
-	"github.com/henrywhitaker3/go-template/internal/app"
-	"github.com/henrywhitaker3/go-template/internal/postgres"
+	"github.com/henrywhitaker3/connect-template/internal/app"
+	"github.com/henrywhitaker3/connect-template/internal/postgres"
 	"github.com/spf13/cobra"
 )
 

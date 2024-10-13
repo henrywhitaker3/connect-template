@@ -2,11 +2,12 @@ package postgres
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
-	"github.com/henrywhitaker3/go-template/database/migrations"
+	"github.com/henrywhitaker3/connect-template/database/migrations"
 )
 
 type Migrator struct {
@@ -20,7 +21,7 @@ func NewMigrator(db *sql.DB) (*Migrator, error) {
 	}
 	fs, err := iofs.New(migrations.Migrations, "files")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("invalid migration fs: %w", err)
 	}
 	m, err := migrate.NewWithInstance(
 		"iofs",
@@ -29,7 +30,7 @@ func NewMigrator(db *sql.DB) (*Migrator, error) {
 		driver,
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create migrator: %w", err)
 	}
 	return &Migrator{
 		m: m,
@@ -38,7 +39,7 @@ func NewMigrator(db *sql.DB) (*Migrator, error) {
 
 func (m *Migrator) Up() error {
 	err := m.m.Up()
-	if err == nil || err.Error() == "no change" {
+	if err == nil || err.Error() == "no change" || err.Error() == "first files: file does not exist" {
 		return nil
 	}
 	return err

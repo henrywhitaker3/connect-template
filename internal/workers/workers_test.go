@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/henrywhitaker3/go-template/internal/test"
-	"github.com/henrywhitaker3/go-template/internal/workers"
+	"github.com/henrywhitaker3/connect-template/internal/test"
+	"github.com/henrywhitaker3/connect-template/internal/workers"
 	"github.com/stretchr/testify/require"
 )
 

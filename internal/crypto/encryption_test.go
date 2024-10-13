@@ -3,8 +3,8 @@ package crypto_test
 import (
 	"testing"
 
-	"github.com/henrywhitaker3/go-template/internal/crypto"
-	"github.com/henrywhitaker3/go-template/internal/test"
+	"github.com/henrywhitaker3/connect-template/internal/crypto"
+	"github.com/henrywhitaker3/connect-template/internal/test"
 	"github.com/stretchr/testify/require"
 )
 

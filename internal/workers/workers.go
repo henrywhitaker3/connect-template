@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/henrywhitaker3/go-template/internal/logger"
-	"github.com/henrywhitaker3/go-template/internal/metrics"
-	"github.com/henrywhitaker3/go-template/internal/redis"
+	"github.com/henrywhitaker3/connect-template/internal/logger"
+	"github.com/henrywhitaker3/connect-template/internal/metrics"
+	"github.com/henrywhitaker3/connect-template/internal/redis"
 	"github.com/redis/rueidis"
 )
 

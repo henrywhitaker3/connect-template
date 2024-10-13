@@ -11,13 +11,12 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/grafana/pyroscope-go"
-	"github.com/henrywhitaker3/go-template/cmd/root"
-	"github.com/henrywhitaker3/go-template/cmd/secrets"
-	"github.com/henrywhitaker3/go-template/internal/app"
-	"github.com/henrywhitaker3/go-template/internal/config"
-	"github.com/henrywhitaker3/go-template/internal/http"
-	"github.com/henrywhitaker3/go-template/internal/logger"
-	"github.com/henrywhitaker3/go-template/internal/tracing"
+	"github.com/henrywhitaker3/connect-template/cmd/root"
+	"github.com/henrywhitaker3/connect-template/cmd/secrets"
+	"github.com/henrywhitaker3/connect-template/internal/app"
+	"github.com/henrywhitaker3/connect-template/internal/config"
+	"github.com/henrywhitaker3/connect-template/internal/logger"
+	"github.com/henrywhitaker3/connect-template/internal/tracing"
 )
 
 var (
@@ -77,7 +76,6 @@ func main() {
 		die(err)
 	}
 	app.Version = version
-	app.Http = http.New(app)
 
 	root := root.New(app)
 	root.SetContext(ctx)
@@ -141,7 +139,7 @@ func getConfigPath() string {
 			return os.Args[i+1]
 		}
 	}
-	return "go-template.yaml"
+	return "connect-template.yaml"
 }
 
 func noConfigHelp() {
@@ -149,7 +147,7 @@ func noConfigHelp() {
 	api [command]
 
 Flags:
-	-c, --config	The path to the api config file (default: go-template.yaml)
+	-c, --config	The path to the api config file (default: connect-template.yaml)
 	`
 	fmt.Println(help)
 	os.Exit(3)

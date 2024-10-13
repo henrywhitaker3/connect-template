@@ -7,8 +7,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/henrywhitaker3/go-template/internal/crypto"
-	"github.com/henrywhitaker3/go-template/internal/users"
+	"github.com/henrywhitaker3/connect-template/internal/crypto"
 	"github.com/redis/rueidis"
 )
 
@@ -28,16 +27,14 @@ func New(secret string, redis rueidis.Client) *Jwt {
 	}
 }
 
-type userClaims struct {
-	User *users.User
+type claims struct {
 	jwt.StandardClaims
 }
 
-func (j *Jwt) NewForUser(user *users.User, expires time.Duration) (string, error) {
+func (j *Jwt) New(expires time.Duration) (string, error) {
 	exp := time.Now().Add(expires)
 
-	claims := userClaims{
-		user,
+	claims := claims{
 		jwt.StandardClaims{
 			ExpiresAt: exp.Unix(),
 			IssuedAt:  time.Now().Unix(),
@@ -54,7 +51,7 @@ func (j *Jwt) NewForUser(user *users.User, expires time.Duration) (string, error
 	return tokenStr, nil
 }
 
-func (j *Jwt) VerifyUser(ctx context.Context, token string) (*users.User, error) {
+func (j *Jwt) Verify(ctx context.Context, token string) error {
 	hash := crypto.Sum(token)
 
 	// Check if the token has been invalidated first
@@ -62,21 +59,21 @@ func (j *Jwt) VerifyUser(ctx context.Context, token string) (*users.User, error)
 	res := j.redis.Do(ctx, cmd)
 	if err := res.Error(); err != nil {
 		if !errors.Is(err, rueidis.Nil) {
-			return nil, err
+			return err
 		}
 	} else {
-		return nil, ErrInvalidated
+		return ErrInvalidated
 	}
 
-	claims, err := j.getUserClaims(token)
+	_, err := j.getClaims(token)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return claims.User, nil
+	return nil
 }
 
-func (j *Jwt) getUserClaims(token string) (*userClaims, error) {
-	claims := &userClaims{}
+func (j *Jwt) getClaims(token string) (*claims, error) {
+	claims := &claims{}
 	_, err := jwt.ParseWithClaims(token, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(j.secret), nil
 	})
@@ -86,8 +83,8 @@ func (j *Jwt) getUserClaims(token string) (*userClaims, error) {
 	return claims, nil
 }
 
-func (j *Jwt) InvalidateUser(ctx context.Context, token string) error {
-	claims, err := j.getUserClaims(token)
+func (j *Jwt) Invalidate(ctx context.Context, token string) error {
+	claims, err := j.getClaims(token)
 	if err != nil {
 		return err
 	}

@@ -50,7 +50,7 @@ jobs:
       - name: Push chart
         uses: appany/helm-oci-chart-releaser@v0.4.2
         with:
-          name: go-template-helm
+          name: connect-template-helm
           repository: henrywhitaker3
           tag: "v${{ env.CHART_VERSION }}"
           path: chart
@@ -78,7 +78,7 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/henrywhitaker3/go-template:latest
-            ghcr.io/henrywhitaker3/go-template:${{ github.ref_name }}
+            ghcr.io/henrywhitaker3/connect-template:latest
+            ghcr.io/henrywhitaker3/connect-template:${{ github.ref_name }}
           build-args: |
             VERSION=${{ github.ref_name }}
