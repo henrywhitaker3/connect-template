@@ -41,14 +41,14 @@ func New(app *app.App) *Server {
 	if app.Config.Telemetry.Tracing.Enabled {
 		opts = append(opts, otelconnect.WithTracerProvider(tracing.TracerProvider))
 	}
-	ot, err := otelconnect.NewInterceptor(opts...)
+	otel, err := otelconnect.NewInterceptor(opts...)
 	if err != nil {
 		panic(err)
 	}
 	base := connectrpc.WithInterceptors(
 		middleware.Errors(),
 		middleware.Zap(app.Config.LogLevel.Level()),
-		ot,
+		otel,
 		middleware.Metrics(),
 	)
 	auth := connectrpc.WithInterceptors(middleware.NewAuth(app.Jwt))
@@ -79,4 +79,8 @@ func (s *Server) Start(ctx context.Context) error {
 func (s *Server) Stop(ctx context.Context) error {
 	logger.Logger(ctx).Info("stopping connect server")
 	return s.server.Shutdown(ctx)
+}
+
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.server.Handler.ServeHTTP(w, r)
 }

@@ -14,11 +14,16 @@ func Errors() connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			resp, err := next(ctx, req)
+
+			if err == nil {
+				return resp, nil
+			}
+
 			switch true {
 			case errors.Is(err, common.ErrUnauthenticated):
 				return resp, connect.NewError(
 					connect.CodeUnauthenticated,
-					errors.New("unauthenticated"),
+					common.ErrUnauthenticated,
 				)
 			}
 
@@ -27,7 +32,10 @@ func Errors() connect.UnaryInterceptorFunc {
 				hub.CaptureException(err)
 			}
 
-			return resp, err
+			return resp, connect.NewError(
+				connect.CodeUnknown,
+				errors.New("something went wrong"),
+			)
 		})
 	}
 }

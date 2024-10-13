@@ -13,6 +13,7 @@ import (
 	"github.com/docker/go-connections/nat"
 	"github.com/henrywhitaker3/connect-template/internal/app"
 	"github.com/henrywhitaker3/connect-template/internal/config"
+	"github.com/henrywhitaker3/connect-template/internal/connect"
 	"github.com/henrywhitaker3/connect-template/internal/logger"
 	pg "github.com/henrywhitaker3/connect-template/internal/postgres"
 	"github.com/stretchr/testify/require"
@@ -118,6 +119,7 @@ func newApp(t *testing.T) (*app.App, context.CancelFunc) {
 
 	app, err := app.New(ctx, conf)
 	require.Nil(t, err)
+	app.Http = connect.New(app)
 
 	mig, err := pg.NewMigrator(app.Database)
 	require.Nil(t, err)
