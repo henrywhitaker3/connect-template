@@ -21,9 +21,12 @@ sed -i "s~ghcr.io/henrywhitaker3/connect-template~ghcr.io/$repoName~g" chart/val
 sed -i "s~module github.com/henrywhitaker3/connect-template~module $repo~g" go.mod
 # and now do all the files that need stuff importing...
 find . -name '*.go' -print0 | xargs -0 sed -i "s~github.com/henrywhitaker3/connect-template~$repo~g"
+find . -name '*.proto' -print0 | xargs -0 sed -i "s~github.com/henrywhitaker3/connect-template~$repo~g"
 
 # and the name in the example config file
 sed -i "s~connect-template~$name~g" api.example.yaml
+# and the name in the buf template
+sed -i "s~connect-template~$name~g" hello/v1/hello.proto
 
 # Now do the default config file location
 sed -i "s~connect-template~$baseName~g" chart/values.yaml

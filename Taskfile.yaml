@@ -65,3 +65,13 @@ tasks:
     silent: true
     cmds:
       - go run main.go secrets key
+
+  buf:lint:
+    desc: Lint protobufs
+    cmds:
+      - buf lint
+
+  buf:generate:
+    desc: Generate protobufs
+    cmds:
+      - buf generate
