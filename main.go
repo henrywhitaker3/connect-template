@@ -15,6 +15,7 @@ import (
 	"github.com/henrywhitaker3/connect-template/cmd/secrets"
 	"github.com/henrywhitaker3/connect-template/internal/app"
 	"github.com/henrywhitaker3/connect-template/internal/config"
+	"github.com/henrywhitaker3/connect-template/internal/connect"
 	"github.com/henrywhitaker3/connect-template/internal/logger"
 	"github.com/henrywhitaker3/connect-template/internal/tracing"
 )
@@ -76,6 +77,7 @@ func main() {
 		die(err)
 	}
 	app.Version = version
+	app.Http = connect.New(app)
 
 	root := root.New(app)
 	root.SetContext(ctx)

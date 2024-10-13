@@ -16,7 +16,6 @@ import (
 	"github.com/henrywhitaker3/connect-template/internal/storage"
 	"github.com/henrywhitaker3/connect-template/internal/workers"
 	gocache "github.com/henrywhitaker3/go-cache"
-	"github.com/labstack/echo/v4"
 	"github.com/redis/rueidis"
 	"github.com/thanos-io/objstore"
 )
@@ -24,8 +23,8 @@ import (
 type server interface {
 	Start(context.Context) error
 	Stop(context.Context) error
-	ServeHTTP(w http.ResponseWriter, r *http.Request)
-	Routes() []*echo.Route
+	// ServeHTTP(w http.ResponseWriter, r *http.Request)
+	Register(path string, handler http.Handler)
 }
 
 type App struct {
