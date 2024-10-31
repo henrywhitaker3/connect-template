@@ -6,7 +6,7 @@ require (
 	connectrpc.com/connect v1.17.0
 	connectrpc.com/otelconnect v0.7.1
 	github.com/XSAM/otelsql v0.35.0
-	github.com/brianvoe/gofakeit/v7 v7.0.4
+	github.com/brianvoe/gofakeit/v7 v7.1.2
 	github.com/docker/go-connections v0.5.0
 	github.com/getsentry/sentry-go v0.29.1
 	github.com/go-kit/log v0.2.1
