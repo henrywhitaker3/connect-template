@@ -4,7 +4,7 @@ go 1.23.1
 
 require (
 	connectrpc.com/connect v1.17.0
-	connectrpc.com/otelconnect v0.7.1
+	connectrpc.com/otelconnect v0.8.0
 	github.com/XSAM/otelsql v0.35.0
 	github.com/brianvoe/gofakeit/v7 v7.0.4
 	github.com/docker/go-connections v0.5.0
